@@ -1,0 +1,23 @@
+{
+    "name": "cos800/think-tools",
+    "description": "TT, ThinkPHP Tools, TP Tools, Tmd ThinkPHP",
+    "type": "library",
+    "license": "copyleft",
+    "authors": [
+        {
+            "name": "cos800",
+            "email": "thisky@qq.com"
+        }
+    ],
+    "require": {
+        "topthink/think-image": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "tt\\": "src/think-tools"
+        },
+        "files": [
+            "src/tt.php"
+        ]
+    }
+}

@@ -2,7 +2,7 @@
     "name": "cos800/think-tools",
     "description": "TT, ThinkPHP Tools, TP Tools, Tmd ThinkPHP",
     "type": "library",
-    "license": "copyleft",
+    "license": "MIT",
     "authors": [
         {
             "name": "cos800",

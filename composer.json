@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "topthink/think-image": "^1.0"
+        "topthink/think-image": "^1.0",
+        "php-curl-class/php-curl-class": "^8.0"
     },
     "autoload": {
         "psr-4": {

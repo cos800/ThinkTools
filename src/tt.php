@@ -51,4 +51,13 @@ class tt
         }
         return $uploadUrl.$path; // 返回原图URL
     }
+
+    static function wxmp($appid='', $secret='') {
+        if (empty($appid) and empty($secret)) {
+            $appid = config('app.wxmp.appid');
+            $secret = config('app.wxmp.secret');
+        }
+        $wxmp = new \tt\WechatMiniProgram($appid, $secret);
+        return $wxmp;
+    }
 }

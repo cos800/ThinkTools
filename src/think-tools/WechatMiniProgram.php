@@ -10,8 +10,17 @@ namespace tt;
 
 use Curl\Curl;
 
-class wx
+class WechatMiniProgram
 {
+    public $appid = '';
+    public $secret = '';
+
+    function __construct($appid, $secret)
+    {
+        $this->appid = $appid;
+        $this->secret = $secret;
+    }
+
     static function decryptData($sessionKey, $encryptedData, $iv) {
         $aesKey = base64_decode($sessionKey);
         if (!$aesKey) throw new \Exception('sessionKey error');
@@ -31,11 +40,11 @@ class wx
         return $data;
     }
 
-    static function jscode2session($appid, $secret, $jsCode) {
+    function jscode2session($jsCode) {
         $curl = new Curl();
         $curl->get("https://api.weixin.qq.com/sns/jscode2session", [
-            'appid' => $appid,
-            'secret' => $secret,
+            'appid' => $this->appid,
+            'secret' => $this->secret,
             'js_code' => $jsCode,
             'grant_type' => 'authorization_code',
         ]);
@@ -44,6 +53,11 @@ class wx
             throw new \Exception($curl->errorMessage);
         }
 
-        return $curl->response;
+        $data = json_decode($curl->response);
+        if (!$data) throw new \Exception('json decode fail');
+
+        if ($data->errcode) throw new \Exception($data->errcode.': '.$data->errmsg);
+
+        return $data;
     }
 }

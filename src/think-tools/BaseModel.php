@@ -9,6 +9,7 @@
 namespace tt;
 
 
+use think\facade\Config;
 use think\Model;
 use think\model\concern\SoftDelete;
 
@@ -21,4 +22,14 @@ class BaseModel extends Model
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
+
+    function getCreateTimeAttr($value) {
+        $format = Config::get('database.datetime_format');
+        return $value ? date($format, $value) : '';
+    }
+
+    function getUpdateTimeAttr($value) {
+        $format = Config::get('database.datetime_format');
+        return $value ? date($format, $value) : '';
+    }
 }

@@ -17,5 +17,5 @@
 ### 路由
 `/route/route.php` 添加以下路由
 ```php
-Route::any('upload/:subdir', '\\tt\\UploadController@index');
+Route::any('api/upload/:subdir', '\\tt\\UploadController@index');
 ```

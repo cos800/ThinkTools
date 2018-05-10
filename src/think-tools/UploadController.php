@@ -12,11 +12,11 @@ use think\facade\Request;
 class UploadController extends ApiBaseController
 {
     function index() {
-        $subdir = Request::param('subdir');
+        $subdir = 'temp';
         $rootPath = config('app.upload.root_path');
-        if (!file_exists($rootPath.$subdir)) {
-            mkdir($rootPath.$subdir, 0777, true);
-        }
+//        if (!file_exists($rootPath.$subdir)) {
+//            mkdir($rootPath.$subdir, 0777, true);
+//        }
 
 
         $file = request()->file('file');

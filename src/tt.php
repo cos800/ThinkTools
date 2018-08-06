@@ -60,4 +60,26 @@ class tt
         $wxmp = new \tt\WechatMiniProgram($appid, $secret);
         return $wxmp;
     }
+
+    static function json($arr) {
+        header('Content-type: application/json');
+        echo json_encode($arr, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    static function success($data=[], $msg='') {
+        self::json([
+            'ok' => 1,
+            'msg' => $msg,
+            'data' => $data,
+        ]);
+    }
+
+    static function error($msg='',$data=[]) {
+        self::json([
+            'ok' => 0,
+            'msg' => $msg,
+            'data' => $data,
+        ]);
+    }
 }

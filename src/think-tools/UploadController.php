@@ -35,9 +35,9 @@ class UploadController extends ApiBaseController
                 'url' => \tt::up($path),
             ];
 
-            $this->success($data);
+            \tt::success($data);
         }else{
-            $this->error($file->getError());
+            \tt::error($file->getError());
         }
     }
 }

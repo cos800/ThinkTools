@@ -11,24 +11,22 @@ use think\facade\Request;
 
 class UploadController extends ApiBaseController
 {
-    function index() {
-        $subdir = 'temp';
-        $rootPath = config('app.upload.root_path');
-//        if (!file_exists($rootPath.$subdir)) {
-//            mkdir($rootPath.$subdir, 0777, true);
-//        }
+    public $tempDir = 'temp/';
 
+    function index() {
+        $rootPath = config('app.upload.root_path');
 
         $file = request()->file('file');
+
         $info = $file->validate([
             'size' => config('app.upload.size'),
             'ext' => config('app.upload.ext'),
         ])->rule(function () {
-            return date('ym/d-His-').substr(microtime(),2,8);
-        })->move($rootPath.$subdir);
+            return $this->tempDir.date('ym/d-His-').substr(microtime(),2,8);
+        })->move($rootPath);
 
         if ($info) {
-            $path = $subdir.'/'.$info->getSaveName();
+            $path = $info->getSaveName();
 
             $data = [
                 'path' => $path,
@@ -39,5 +37,54 @@ class UploadController extends ApiBaseController
         }else{
             \tt::error($file->getError());
         }
+    }
+
+    function imgDataUrl() {
+        $rootPath = config('app.upload.root_path');
+        $savePath = $this->tempDir.date('ym/d-His-').substr(microtime(),2,8).'.png';
+        $fullPath = $rootPath.$savePath;
+        $dirPath = dirname($fullPath);
+
+        if (!file_exists($dirPath)) {
+            mkdir($dirPath, 0777, true);
+        }
+
+        $dataUrl = $_POST['imgDataUrl'];
+        $dataUrl = substr($dataUrl, strpos($dataUrl, ",") + 1);
+        $dataUrl = base64_decode($dataUrl) ?: \tt::error('图片数据错误');
+
+        file_put_contents($fullPath, $dataUrl) or \tt::error('图片保存失败');
+
+        $data = [
+            'path' => $savePath,
+            'url' => \tt::up($savePath),
+        ];
+
+        \tt::success($data);
+    }
+
+    function moveDir($tempPath, $newDir) {
+        if (!str::endsWith($newDir, '/')) {
+            $newDir .= '/';
+        }
+
+        $newPath = str_replace($this->tempDir, $newDir, $tempPath);
+
+        if (!str::startsWith($tempPath, $this->tempDir)) {
+            return $newPath;
+        }
+
+        $rootPath = config('app.upload.root_path');
+        $tempFull = $rootPath.$tempPath;
+        $newFull = $rootPath.$newPath;
+
+        $dirPath = dirname($newFull);
+        if (!file_exists($dirPath)) {
+            mkdir($dirPath, 0777, true);
+        }
+
+        rename($tempFull, $newFull);
+
+        return $newPath;
     }
 }

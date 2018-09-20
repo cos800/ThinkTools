@@ -63,16 +63,20 @@ class UploadController extends ApiBaseController
         \tt::success($data);
     }
 
-    function moveDir($tempPath, $newDir) {
+    static function moveDir($tempPath, $newDir) {
+        if (!$tempPath) return '';
+
+        $self = new static();
+
+        if (!str::startsWith($tempPath, $self->tempDir)) {
+            return $tempPath;
+        }
+
         if (!str::endsWith($newDir, '/')) {
             $newDir .= '/';
         }
 
-        $newPath = str_replace($this->tempDir, $newDir, $tempPath);
-
-        if (!str::startsWith($tempPath, $this->tempDir)) {
-            return $newPath;
-        }
+        $newPath = str_replace($self->tempDir, $newDir, $tempPath);
 
         $rootPath = config('app.upload.root_path');
         $tempFull = $rootPath.$tempPath;

@@ -68,15 +68,15 @@ class tt
     }
 
     static function success($data=[], $msg='') {
-        self::json([
+        static::json([
             'ok' => 1,
             'msg' => $msg,
             'data' => $data,
         ]);
     }
 
-    static function error($msg='',$data=[]) {
-        self::json([
+    static function error($msg='', $data=[]) {
+        static::json([
             'ok' => 0,
             'msg' => $msg,
             'data' => $data,

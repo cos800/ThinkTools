@@ -9,8 +9,9 @@ namespace tt;
 
 
 use Curl\Curl;
+use think\facade\Cache;
 
-class WechatMiniProgram
+class Weixin
 {
     public $appid = '';
     public $secret = '';
@@ -19,6 +20,37 @@ class WechatMiniProgram
     {
         $this->appid = $appid;
         $this->secret = $secret;
+    }
+
+    function accessToken() {
+        $cacheId = 'access_token_'.$this->appid;
+
+        $token = Cache::get($cacheId);
+
+        if (!$token) {
+            $data = static::httpGet("https://api.weixin.qq.com/cgi-bin/token", [
+                'grant_type' => 'client_credential',
+                'appid' => $this->appid,
+                'secret' => $this->secret,
+            ]);
+
+            $token = $data->access_token;
+
+            Cache::set($cacheId, $token, $data->expires_in);
+        }
+
+        return $token;
+    }
+
+    function userInfo($openid, $lang='zh_CN') {
+        $token = $this->accessToken();
+        $data = static::httpGet('https://api.weixin.qq.com/cgi-bin/user/info', [
+            'access_token' => $token,
+            'openid' => $openid,
+            'lang' => $lang,
+        ]);
+
+        return $data;
     }
 
     static function decryptData($sessionKey, $encryptedData, $iv) {
@@ -41,20 +73,31 @@ class WechatMiniProgram
     }
 
     function jscode2session($jsCode) {
-        $curl = new Curl();
-        $curl->get("https://api.weixin.qq.com/sns/jscode2session", [
+        $data = static::httpGet("https://api.weixin.qq.com/sns/jscode2session", [
             'appid' => $this->appid,
             'secret' => $this->secret,
             'js_code' => $jsCode,
             'grant_type' => 'authorization_code',
         ]);
-        
+
+        return $data;
+    }
+
+    static function httpGet($url, $query=[]) {
+        $curl = new Curl();
+        $curl->get($url, $query);
+
         if ($curl->error) {
             throw new \Exception($curl->errorMessage);
         }
 
-        $data = json_decode($curl->response);
-        if (!$data) throw new \Exception('json decode fail');
+        if (is_string($curl->response)) {
+            $data = json_decode($curl->response);
+            if (!$data) throw new \Exception('json decode fail');
+        }else{
+            $data = $curl->response;
+        }
+
 
         if ($data->errcode) throw new \Exception($data->errcode.': '.$data->errmsg);
 

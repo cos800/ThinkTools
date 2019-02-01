@@ -57,7 +57,7 @@ class tt
             $appid = config('app.wxmp.appid');
             $secret = config('app.wxmp.secret');
         }
-        $wxmp = new \tt\WechatMiniProgram($appid, $secret);
+        $wxmp = new \tt\Weixin($appid, $secret);
         return $wxmp;
     }
 

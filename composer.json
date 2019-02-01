@@ -11,7 +11,8 @@
     ],
     "require": {
         "topthink/think-image": "^1.0",
-        "php-curl-class/php-curl-class": "^8.0"
+        "php-curl-class/php-curl-class": "^8.0",
+        "topthink/framework": "^5.1"
     },
     "autoload": {
         "psr-4": {

@@ -1,7 +1,8 @@
 {
     "name": "cos800/think-tools",
-    "description": "TT, ThinkPHP Tools, TP Tools, Tmd ThinkPHP",
     "type": "library",
+    "description": "ThinkPHP 6.0 Common tools",
+    "keywords": ["TT", "ThinkPHP Tools", "TP Tools", "Tmd ThinkPHP"],
     "license": "MIT",
     "authors": [
         {
@@ -9,17 +10,15 @@
             "email": "thisky@qq.com"
         }
     ],
-    "require": {
-        "topthink/think-image": "^1.0",
-        "php-curl-class/php-curl-class": "^8.0",
-        "topthink/framework": "^5.1"
-    },
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev": {},
     "autoload": {
         "psr-4": {
-            "tt\\": "src/think-tools"
+            "tt\\": "tt"
         },
         "files": [
-            "src/tt.php"
+            "tt.php"
         ]
     }
 }
